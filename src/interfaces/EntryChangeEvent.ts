@@ -1,0 +1,1 @@
+export type EntryChangeEvent = (...args: any[]) => boolean; // TODO: Define Properties

@@ -1,0 +1,41 @@
+{
+  "name": "store-iq",
+  "version": "1.0.0",
+  "description": "An easy to use alternative to directly using WebStorage and IndexedDB",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TLTimeplex/storeIQ.git"
+  },
+  "keywords": [
+    "WebStorage",
+    "IndexedDB",
+    "Storage",
+    "Store",
+    "LocalStorage",
+    "SessionStorage"
+  ],
+  "author": "Timeplex",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TLTimeplex/storeIQ/issues"
+  },
+  "homepage": "https://github.com/TLTimeplex/storeIQ#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  }
+}
