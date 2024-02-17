@@ -1,1 +1,1 @@
-export type EntryChangeEvent = (...args: any[]) => boolean; // TODO: Define Properties
+export type _SIQ_EntryChangeEvent = (...args: any[]) => boolean; // TODO: Define Properties

@@ -1,26 +1,37 @@
-import { EntryMeta } from './interfaces/EntryMeta';
-import { EntryOptions } from './interfaces/EntryOptions';
-import { QISSettings } from './interfaces/QISSettings';
-import { QISIntern } from './interfaces/QISIntern';
+import { _SIQ_EntryChangeEvent } from './interfaces/EntryChangeEvent';
+import { _SIQ_EntryMeta } from './interfaces/EntryMeta';
+import { _SIQ_EntryOptions } from './interfaces/EntryOptions';
+import { _SIQ_Intern } from './interfaces/Intern';
+import { _SIQ_Settings } from './interfaces/Settings';
 
-import { defaultSettings } from './config/defaultSettings';
+import { _SIQ_defaultSettings } from './config/defaultSettings';
 
-import { _setItem } from './functions/setItem';
-import { EntryChangeEvent } from './interfaces/EntryChangeEvent';
+import { _SIQ_setItem } from './functions/setItem';
 
-class QIS {
+import { _SIQ_ErrorHandler } from './systems/ErrorHandler';
+import { _SIQ_SaveQueue } from './systems/SaveQueue';
+
+class SIQ {
   private readonly MemoryMap = new Map<string, any>();
-  private readonly Settings: QISSettings;
+  private readonly Settings: _SIQ_Settings;
+  private readonly Queue: _SIQ_SaveQueue;
+  private readonly ErrorHandler: _SIQ_ErrorHandler;
 
-  private internSet: QISIntern;
+  private internSet: _SIQ_Intern;
 
-  constructor(settings?: QISSettings) {
-    this.Settings = settings || defaultSettings;
-
+  constructor(settings?: _SIQ_Settings) {
+    this.Settings = settings || _SIQ_defaultSettings;
+    this.ErrorHandler = new _SIQ_ErrorHandler();
+    this.Queue = new _SIQ_SaveQueue(this.Settings, this.ErrorHandler);
+    
     this.internSet = {
       MemoryMap: this.MemoryMap,
-      Settings: this.Settings
+      Settings: this.Settings,
+      Queue: this.Queue,
+      ErrorHandler: this.ErrorHandler
     };
+    
+    this.Queue.start();
   }
 
   /**
@@ -30,9 +41,9 @@ class QIS {
    * @param options Optional settings for the entry
    * @returns A promise that resolves when the item is saved // added to save queue
    */
-  public async setItem(key: string, value: any, options?: EntryOptions): Promise<void> {
+  public async setItem(key: string, value: any, options?: _SIQ_EntryOptions): Promise<void> {
     throw new Error('Not implemented'); // TODO: Impl
-    return _setItem(this.internSet, key, value, options);
+    return _SIQ_setItem(this.internSet, key, value, options);
   }
 
   /**
@@ -74,7 +85,7 @@ class QIS {
    * @param key The key to get the metadata for
    * @returns A promise that resolves with the metadata
    */
-  public async getMeta(key: string): Promise<EntryMeta> {
+  public async getMeta(key: string): Promise<_SIQ_EntryMeta> {
     throw new Error('Not implemented'); // TODO: Impl
   }
 
@@ -108,7 +119,7 @@ class QIS {
    * @param key The key to get the options for
    * @returns A promise that resolves with the options
    */
-  public setOptions(key: string, options: EntryOptions): void {
+  public setOptions(key: string, options: _SIQ_EntryOptions): void {
     throw new Error('Not implemented'); // TODO: Impl
   }
 
@@ -117,7 +128,7 @@ class QIS {
    * @param key The key of the item to listen for changes on
    * @param callback The callback to call when the item changes
    */
-  public on(key: string, callback: EntryChangeEvent): void {
+  public on(key: string, callback: _SIQ_EntryChangeEvent): void {
     throw new Error('Not implemented'); // TODO: Impl
   }
 
@@ -126,7 +137,7 @@ class QIS {
    * @param key The key of the item to stop listening for changes on
    * @param callback The callback to remove
    */
-  public off(key: string, callback: EntryChangeEvent): void {
+  public off(key: string, callback: _SIQ_EntryChangeEvent): void {
     throw new Error('Not implemented'); // TODO: Impl
   }
 
@@ -163,4 +174,4 @@ class QIS {
 
 }
 
-export default QIS;
+export default SIQ;

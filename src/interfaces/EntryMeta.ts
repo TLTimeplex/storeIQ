@@ -1,3 +1,3 @@
-export interface EntryMeta {
+export interface _SIQ_EntryMeta {
   // TODO:
 }

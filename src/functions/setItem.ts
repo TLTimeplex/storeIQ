@@ -1,8 +1,8 @@
-import { EntryOptions } from "../interfaces/EntryOptions";
+import { _SIQ_EntryOptions } from "../interfaces/EntryOptions";
 
-import { QISIntern } from "../interfaces/QISIntern";
+import { _SIQ_Intern } from "../interfaces/Intern";
 
-export function _setItem(intern: QISIntern, key: string, value: any, options?: EntryOptions): Promise<void> {
+export function _SIQ_setItem(intern: _SIQ_Intern, key: string, value: any, options?: _SIQ_EntryOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       // Set the value in the memory map

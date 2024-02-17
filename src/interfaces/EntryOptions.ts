@@ -1,3 +1,3 @@
-export interface EntryOptions {
+export interface _SIQ_EntryOptions {
   // TODO:
 }
