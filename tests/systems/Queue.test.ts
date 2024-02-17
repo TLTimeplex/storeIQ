@@ -1,4 +1,4 @@
-import { _SIQ_Queue } from "../src/systems/Queue";
+import { _SIQ_Queue } from "../../src/systems/Queue";
 
 describe('SIQQueue', () => {
   let queue: _SIQ_Queue<number>;

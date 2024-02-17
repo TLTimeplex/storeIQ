@@ -1,4 +1,5 @@
 export class _SIQ_Queue<T> {
+
   private items: T[];
 
   constructor() {
@@ -42,5 +43,13 @@ export class _SIQ_Queue<T> {
    */
   length(): number {
     return this.items.length;
+  }
+
+  /**
+   * Check if the queue is empty
+   * @returns Whether the queue is empty
+   */
+  isEmpty(): boolean {
+    return this.items.length === 0;
   }
 }
