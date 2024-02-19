@@ -16,6 +16,7 @@ describe('SaveQueue', () => {
 
     saveQueue = new _SIQ_AsyncStorageQueue({
       debug: true,
+      webStorageThreshold: 1000,
       shutter: {
         enabled: true,
         interval: 100,
