@@ -9,12 +9,12 @@ import { _SIQ_defaultSettings } from './config/defaultSettings';
 import { _SIQ_setItem } from './functions/setItem';
 
 import { _SIQ_ErrorHandler } from './systems/ErrorHandler';
-import { _SIQ_SaveQueue } from './systems/SaveQueue';
+import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
 
 class SIQ {
   private readonly MemoryMap = new Map<string, any>();
   private readonly Settings: _SIQ_Settings;
-  private readonly Queue: _SIQ_SaveQueue;
+  private readonly Queue: _SIQ_AsyncStorageQueue;
   private readonly ErrorHandler: _SIQ_ErrorHandler;
 
   private internSet: _SIQ_Intern;
@@ -22,15 +22,15 @@ class SIQ {
   constructor(settings?: _SIQ_Settings) {
     this.Settings = settings || _SIQ_defaultSettings;
     this.ErrorHandler = new _SIQ_ErrorHandler();
-    this.Queue = new _SIQ_SaveQueue(this.Settings, this.ErrorHandler);
-    
+    this.Queue = new _SIQ_AsyncStorageQueue(this.Settings, this.ErrorHandler);
+
     this.internSet = {
       MemoryMap: this.MemoryMap,
       Settings: this.Settings,
       Queue: this.Queue,
       ErrorHandler: this.ErrorHandler
     };
-    
+
     this.Queue.start();
   }
 
@@ -42,7 +42,6 @@ class SIQ {
    * @returns A promise that resolves when the item is saved // added to save queue
    */
   public async setItem(key: string, value: any, options?: _SIQ_EntryOptions): Promise<void> {
-    throw new Error('Not implemented'); // TODO: Impl
     return _SIQ_setItem(this.internSet, key, value, options);
   }
 

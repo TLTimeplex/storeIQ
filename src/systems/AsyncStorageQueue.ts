@@ -1,14 +1,14 @@
 
 import { _SIQ_Settings } from "../interfaces/Settings";
-import { _SIQ_StoreOrder } from "../interfaces/StoreOrder";
+import { _SIQ_StorageOrder } from "../interfaces/StorageOrder";
 import { _SIQ_ErrorHandler } from "./ErrorHandler";
 
 import { _SIQ_Queue } from "./Queue";
 
-export class _SIQ_SaveQueue {
+export class _SIQ_AsyncStorageQueue {
   private errOut: _SIQ_ErrorHandler;
   private settings: _SIQ_Settings;
-  private queue: _SIQ_Queue<_SIQ_StoreOrder>;
+  private queue: _SIQ_Queue<_SIQ_StorageOrder>;
 
   private blocked = true;
   private enabled = false;
@@ -19,13 +19,13 @@ export class _SIQ_SaveQueue {
   constructor(settings: _SIQ_Settings, errorHandler: _SIQ_ErrorHandler) {
     this.errOut = errorHandler;
     this.settings = settings;
-    this.queue = new _SIQ_Queue<_SIQ_StoreOrder>();
+    this.queue = new _SIQ_Queue<_SIQ_StorageOrder>();
 
     this.init();
   }
 
   /**
-   * Initialize the save queue
+   * Initialize the async queue
    */
   private init() {
     // TODO: Initialize?
@@ -43,7 +43,7 @@ export class _SIQ_SaveQueue {
         const next = (end + this.settings.shutter.timeout);
 
         if (this.settings.debug) {
-          console.log(`Save Queue: start:${start}, end:${end}, next:${next}`);
+          console.log(`Async Queue: start:${start}, end:${end}, next:${next}`);
         }
 
         this.process(end);
@@ -52,13 +52,13 @@ export class _SIQ_SaveQueue {
       }
 
       if (this.settings.debug) {
-        console.log('Save Queue: Stopped by request.');
+        console.log('Async Queue: Stopped by request.');
       }
     }
     catch (err) {
       this.errOut.error(err as Error);
       if (this.settings.debug) {
-        console.log('Save Queue: Stopped by error.');
+        console.log('Async Queue: Stopped by error.');
       }
     }
     finally {
@@ -67,7 +67,7 @@ export class _SIQ_SaveQueue {
   }
 
   /**
-   * Process the save queue
+   * Process the async queue
    * @param end The time at which the process should end
    */
   private async process(end: number) {
@@ -86,12 +86,12 @@ export class _SIQ_SaveQueue {
   }
 
   /**
-   * Start the save queue after it has been initialized
+   * Start the async queue after it has been initialized
    */
   public start() {
-    if (this.running) return this.errOut.error(new Error('Save Queue is already running'));
-    if (this.enabled) return this.errOut.error(new Error('Save Queue is already enabled'));
-    if (this.task !== null) return this.errOut.error(new Error('Save Queue has already been initialized'));
+    if (this.running) return this.errOut.error(new Error('Async Queue is already running'));
+    if (this.enabled) return this.errOut.error(new Error('Async Queue is already enabled'));
+    if (this.task !== null) return this.errOut.error(new Error('Async Queue has already been initialized'));
 
     this.enabled = true;
     this.blocked = false;
@@ -99,11 +99,11 @@ export class _SIQ_SaveQueue {
   }
 
   /**
-   * Stop the save queue
+   * Stop the async queue
    */
   public async stop() {
-    if (!this.enabled) return this.errOut.error(new Error('Save Queue is not enabled'));
-    if (this.task === null) return this.errOut.error(new Error('Save Queue has not been initialized'));
+    if (!this.enabled) return this.errOut.error(new Error('Async Queue is not enabled'));
+    if (this.task === null) return this.errOut.error(new Error('Async Queue has not been initialized'));
 
     this.enabled = false;
     await this.task;
@@ -116,6 +116,15 @@ export class _SIQ_SaveQueue {
     return this.running;
   }
 
+
+  /**
+   * Add a storage order to the queue
+   * @param storageOrder The storage order to add to the queue
+    */
+  addOrder(storageOrder: _SIQ_StorageOrder) {
+    this.queue.enqueue(storageOrder);
+  }
+
 }
 
-export default _SIQ_SaveQueue;
+export default _SIQ_AsyncStorageQueue;

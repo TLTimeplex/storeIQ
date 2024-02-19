@@ -1,9 +1,9 @@
 import { _SIQ_ErrorHandler } from "../../src/systems/ErrorHandler";
-import { _SIQ_SaveQueue } from "../../src/systems/SaveQueue";
+import { _SIQ_AsyncStorageQueue } from "../../src/systems/AsyncStorageQueue";
 
 
 describe('SaveQueue', () => {
-  let saveQueue: _SIQ_SaveQueue;
+  let saveQueue: _SIQ_AsyncStorageQueue;
   let errorHandler: _SIQ_ErrorHandler;
   let errorListener: (error: Error) => void;
 
@@ -14,7 +14,7 @@ describe('SaveQueue', () => {
     });
     errorHandler.addListener(errorListener);
 
-    saveQueue = new _SIQ_SaveQueue({
+    saveQueue = new _SIQ_AsyncStorageQueue({
       debug: true,
       shutter: {
         enabled: true,
