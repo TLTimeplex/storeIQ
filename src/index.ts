@@ -13,27 +13,25 @@ import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
 import { _SIQ_Register } from './systems/Register';
 
 class SIQ {
-  private readonly MemoryMap: Map<string, any>;
-  private readonly Settings: _SIQ_Settings;
-  private readonly Queue: _SIQ_AsyncStorageQueue;
-  private readonly ErrorHandler: _SIQ_ErrorHandler;
-  private readonly Register: _SIQ_Register;
-
-  private internSet: _SIQ_Intern;
+  private readonly internSet: _SIQ_Intern;
 
   constructor(settings?: _SIQ_Public_Settings) {
-    this.MemoryMap = new Map<string, any>()
-    this.Settings = _SIQ_mergeSettings(settings || {}, _SIQ_defaultSettings);
-    this.ErrorHandler = new _SIQ_ErrorHandler();
-    this.Register = new _SIQ_Register();
-    this.Queue = new _SIQ_AsyncStorageQueue(this.Settings, this.ErrorHandler);
+    const MemoryMap: Map<string, any>     = new Map<string, any>()
+    const sessionID: number               = new Date().getTime(); // Use date as session ID. It auto increments ;D
+    
+    const Settings: _SIQ_Settings         = _SIQ_mergeSettings(settings || {}, _SIQ_defaultSettings);
+    const ErrorHandler: _SIQ_ErrorHandler = new _SIQ_ErrorHandler();
+
+    const Register: _SIQ_Register         = new _SIQ_Register(Settings, ErrorHandler);
+    const Queue: _SIQ_AsyncStorageQueue   = new _SIQ_AsyncStorageQueue(Settings, ErrorHandler);
 
     this.internSet = {
-      MemoryMap: this.MemoryMap,
-      Settings: this.Settings,
-      Register: this.Register,
-      Queue: this.Queue,
-      ErrorHandler: this.ErrorHandler
+      MemoryMap:    MemoryMap,
+      Settings:     Settings,
+      Register:     Register,
+      Queue:        Queue,
+      ErrorHandler: ErrorHandler,
+      sessionID:    sessionID
     };
   }
 
@@ -42,9 +40,9 @@ class SIQ {
    */
   public async start(): Promise<void> {
     var promises = [];
-    promises.push(this.Queue.start());
-    promises.push(this.Register.loadRegister());
-    promises.push(this.Queue.init());
+    promises.push(this.internSet.Queue.start());
+    promises.push(this.internSet.Register.loadRegister());
+    promises.push(this.internSet.Queue.init());
     await Promise.all(promises);
   }
 
@@ -89,8 +87,8 @@ class SIQ {
    * Clear all temporary items from the storage managed by this instance
    * @returns A promise that resolves when the storage is cleared
    */
-  public async clear(): Promise<void> {
-    throw new Error('Not implemented'); // TODO: Impl
+  public clear(): void {
+    this.internSet.MemoryMap.clear();
   }
 
   /**
@@ -167,7 +165,7 @@ class SIQ {
    * @param callback The callback to call when an error occurs
    */
   public onError(callback: (error: Error) => void): void {
-    this.ErrorHandler.addListener(callback);
+    this.internSet.ErrorHandler.addListener(callback);
   }
 
   /**
@@ -175,14 +173,14 @@ class SIQ {
    * @param callback The callback to remove
    */
   public offError(callback: (error: Error) => void): void {
-    this.ErrorHandler.removeListener(callback);
+    this.internSet.ErrorHandler.removeListener(callback);
   }
 
   /**
    * Removes all event Listeners for internal errors
    */
   public offAllErrors(): void {
-    this.ErrorHandler.removeAllListener();
+    this.internSet.ErrorHandler.removeAllListener();
   }
 
 }

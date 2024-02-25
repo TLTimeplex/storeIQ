@@ -9,4 +9,5 @@ export interface _SIQ_Intern {
   Queue: _SIQ_AsyncStorageQueue;
   Register: _SIQ_Register;
   ErrorHandler: _SIQ_ErrorHandler;
+  sessionID: Number;
 }

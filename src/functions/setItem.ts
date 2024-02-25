@@ -2,6 +2,7 @@ import { _SIQ_Location } from "../enum/Location";
 import { _SIQ_EntryOptions } from "../interfaces/EntryOptions";
 
 import { _SIQ_Intern } from "../interfaces/Intern";
+import { _SIQ_RegisterData } from "../interfaces/RegisterData";
 import { _SIQ_StorageOrder } from "../interfaces/StorageOrder";
 import { _SIQ_sanityCheck_EntryOptions } from "./sanityCheck/sanityCheck_EntryOptions";
 
@@ -47,6 +48,20 @@ export function _SIQ_setItem(intern: _SIQ_Intern, key: string, value: any, optio
 
       // Add the storage order to the queue
       intern.Queue.addOrder(storageOrder);
+
+      // Add the item to the register
+      var settings: _SIQ_RegisterData = {
+        location: storageLocation
+      };
+      if (options !== undefined) {
+        if (options.expires !== undefined) {
+          settings.expires = options.expires;
+        }
+        if (options.sessional !== undefined) {
+          settings.session = intern.sessionID;
+        }
+      }
+      intern.Register.set(key, settings);
     }
     catch (error) {
       intern.ErrorHandler.error(error as Error);
