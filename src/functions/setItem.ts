@@ -35,10 +35,6 @@ export function _SIQ_setItem(intern: _SIQ_Intern, key: string, value: any, optio
         key: key,
         location: storageLocation,
         value: value,
-        options: {
-          expires: options?.expires,
-          sessional: options?.sessional
-        },
         callback: (success: boolean) => {
           if (success) {
             resolve();

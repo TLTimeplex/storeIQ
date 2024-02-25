@@ -2,7 +2,7 @@ import { _SIQ_EntryChangeEvent } from './interfaces/EntryChangeEvent';
 import { _SIQ_EntryMeta } from './interfaces/EntryMeta';
 import { _SIQ_EntryOptions } from './interfaces/EntryOptions';
 import { _SIQ_Intern } from './interfaces/Intern';
-import { _SIQ_Settings } from './interfaces/Settings';
+import { _SIQ_Public_Settings, _SIQ_Settings, _SIQ_mergeSettings } from './interfaces/Settings';
 
 import { _SIQ_defaultSettings } from './config/defaultSettings';
 
@@ -10,28 +10,42 @@ import { _SIQ_setItem } from './functions/setItem';
 
 import { _SIQ_ErrorHandler } from './systems/ErrorHandler';
 import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
+import { _SIQ_Register } from './systems/Register';
 
 class SIQ {
-  private readonly MemoryMap = new Map<string, any>();
+  private readonly MemoryMap: Map<string, any>;
   private readonly Settings: _SIQ_Settings;
   private readonly Queue: _SIQ_AsyncStorageQueue;
   private readonly ErrorHandler: _SIQ_ErrorHandler;
+  private readonly Register: _SIQ_Register;
 
   private internSet: _SIQ_Intern;
 
-  constructor(settings?: _SIQ_Settings) {
-    this.Settings = settings || _SIQ_defaultSettings;
+  constructor(settings?: _SIQ_Public_Settings) {
+    this.MemoryMap = new Map<string, any>()
+    this.Settings = _SIQ_mergeSettings(settings || {}, _SIQ_defaultSettings);
     this.ErrorHandler = new _SIQ_ErrorHandler();
+    this.Register = new _SIQ_Register();
     this.Queue = new _SIQ_AsyncStorageQueue(this.Settings, this.ErrorHandler);
 
     this.internSet = {
       MemoryMap: this.MemoryMap,
       Settings: this.Settings,
+      Register: this.Register,
       Queue: this.Queue,
       ErrorHandler: this.ErrorHandler
     };
+  }
 
-    this.Queue.start();
+  /**
+   * Start the storage instance
+   */
+  public async start(): Promise<void> {
+    var promises = [];
+    promises.push(this.Queue.start());
+    promises.push(this.Register.loadRegister());
+    promises.push(this.Queue.init());
+    await Promise.all(promises);
   }
 
   /**
@@ -153,7 +167,7 @@ class SIQ {
    * @param callback The callback to call when an error occurs
    */
   public onError(callback: (error: Error) => void): void {
-    throw new Error('Not implemented'); // TODO: Impl
+    this.ErrorHandler.addListener(callback);
   }
 
   /**
@@ -161,14 +175,14 @@ class SIQ {
    * @param callback The callback to remove
    */
   public offError(callback: (error: Error) => void): void {
-    throw new Error('Not implemented'); // TODO: Impl
+    this.ErrorHandler.removeListener(callback);
   }
 
   /**
    * Removes all event Listeners for internal errors
    */
   public offAllErrors(): void {
-    throw new Error('Not implemented'); // TODO: Impl
+    this.ErrorHandler.removeAllListener();
   }
 
 }

@@ -1,5 +1,5 @@
 export enum _SIQ_Location {
-  LocalStorage = 'localStorage',
-  SessionStorage = 'sessionStorage',
-  IndexedDB = 'indexedDB'
+  LocalStorage = 'l',
+  SessionStorage = 's',
+  IndexedDB = 'i'
 }
