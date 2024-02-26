@@ -13,6 +13,7 @@ import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
 import { _SIQ_Register } from './systems/Register';
 import { _SIQ_IndexedDBController } from './systems/storage/indexedDB';
 import { _SIQ_getItem } from './functions/getItem';
+import { _SIQ_removeItem } from './functions/removeItem';
 
 class SIQ {
   private readonly instanceData: _SIQ_Intern;
@@ -82,7 +83,7 @@ class SIQ {
    * @returns A promise that resolves when the item is removed
    */
   public async removeItem(key: string): Promise<void> {
-    throw new Error('Not implemented'); // TODO: Impl
+    _SIQ_removeItem(this.instanceData, key);
   }
 
   /**

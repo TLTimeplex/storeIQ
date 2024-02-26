@@ -1,5 +1,6 @@
 import { _SIQ_Location } from "../enum/Location";
 import { _SIQ_Intern } from "../interfaces/Intern";
+import { _SIQ_I_removeItem } from "./removeItem";
 import { _SIQ_getLocalStorage, _SIQ_removeLocalStorage } from "./storage/localStorage";
 import { _SIQ_getSessionStorage, _SIQ_removeSessionStorage } from "./storage/sessionStorage";
 
@@ -12,25 +13,8 @@ export async function _SIQ_getItem(intern: _SIQ_Intern, key: string): Promise<an
 
   if (itemInfo.session !== undefined && itemInfo.session !== intern.SessionID
     || itemInfo.expires !== undefined && itemInfo.expires < new Date().getTime()) {
-    // Remove temporary items that have expired
-    intern.MemoryMap.delete(key);
-    // Remove the item from the storage
-    switch (itemInfo.location) {
-      case _SIQ_Location.LocalStorage:
-        _SIQ_removeLocalStorage(key);
-        break;
-      case _SIQ_Location.SessionStorage:
-        _SIQ_removeSessionStorage(key);
-        break;
-      case _SIQ_Location.IndexedDB:
-        intern.IndexDBStorage.delete(key);
-        break;
-      default:
-        intern.ErrorHandler.error(new Error("Unknown storage location"));
-        break;
-    }
-    // Remove the item from the register
-    intern.Register.delete(key);
+
+    await _SIQ_I_removeItem(intern, key, itemInfo);
 
     return null;
   }
