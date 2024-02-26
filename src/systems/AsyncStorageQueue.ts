@@ -20,11 +20,12 @@ export class _SIQ_AsyncStorageQueue {
 
   private task: Promise<void> | null = null;
 
-  private indexedDB: _SIQ_IndexedDBController | null = null;
+  private indexedDB: _SIQ_IndexedDBController;
 
-  constructor(settings: _SIQ_Settings, errorHandler: _SIQ_ErrorHandler) {
+  constructor(settings: _SIQ_Settings, errorHandler: _SIQ_ErrorHandler, indexedDB: _SIQ_IndexedDBController) {
     this.errOut = errorHandler;
     this.settings = settings;
+    this.indexedDB = indexedDB;
     this.queue = new _SIQ_Queue<_SIQ_StorageOrder>();
   }
 
@@ -32,8 +33,6 @@ export class _SIQ_AsyncStorageQueue {
    * Initialize the async queue
    */
   public async init(): Promise<void> {
-    this.indexedDB = new _SIQ_IndexedDBController('storage', 'storage');
-    await this.indexedDB.openDB();
   }
 
   /**

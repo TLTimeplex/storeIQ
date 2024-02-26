@@ -11,27 +11,32 @@ import { _SIQ_setItem } from './functions/setItem';
 import { _SIQ_ErrorHandler } from './systems/ErrorHandler';
 import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
 import { _SIQ_Register } from './systems/Register';
+import { _SIQ_IndexedDBController } from './systems/storage/indexedDB';
+import { _SIQ_getItem } from './functions/getItem';
 
 class SIQ {
-  private readonly internSet: _SIQ_Intern;
+  private readonly instanceData: _SIQ_Intern;
 
   constructor(settings?: _SIQ_Public_Settings) {
-    const MemoryMap: Map<string, any>     = new Map<string, any>()
+    const MemoryMap: Map<string, any>     = new Map<string, any>();
     const sessionID: number               = new Date().getTime(); // Use date as session ID. It auto increments ;D
     
-    const Settings: _SIQ_Settings         = _SIQ_mergeSettings(settings || {}, _SIQ_defaultSettings);
+    const Settings: _SIQ_Settings         = _SIQ_mergeSettings(settings || {} as _SIQ_Public_Settings, _SIQ_defaultSettings);
     const ErrorHandler: _SIQ_ErrorHandler = new _SIQ_ErrorHandler();
+    const IndexDBStorage
+               : _SIQ_IndexedDBController = new _SIQ_IndexedDBController('storage', 'storage');
 
     const Register: _SIQ_Register         = new _SIQ_Register(Settings, ErrorHandler);
-    const Queue: _SIQ_AsyncStorageQueue   = new _SIQ_AsyncStorageQueue(Settings, ErrorHandler);
+    const Queue: _SIQ_AsyncStorageQueue   = new _SIQ_AsyncStorageQueue(Settings, ErrorHandler, IndexDBStorage);
 
-    this.internSet = {
-      MemoryMap:    MemoryMap,
-      Settings:     Settings,
-      Register:     Register,
-      Queue:        Queue,
-      ErrorHandler: ErrorHandler,
-      sessionID:    sessionID
+    this.instanceData = {
+      MemoryMap:      MemoryMap,
+      Settings:       Settings,
+      Register:       Register,
+      Queue:          Queue,
+      ErrorHandler:   ErrorHandler,
+      SessionID:      sessionID,
+      IndexDBStorage: IndexDBStorage
     };
   }
 
@@ -40,9 +45,14 @@ class SIQ {
    */
   public async start(): Promise<void> {
     var promises = [];
-    promises.push(this.internSet.Queue.start());
-    promises.push(this.internSet.Register.loadRegister());
-    promises.push(this.internSet.Queue.init());
+    promises.push(this.instanceData.IndexDBStorage.openDB());
+    promises.push(this.instanceData.Queue.start());
+
+    const rlr = this.instanceData.Register.loadRegister()
+    promises.push(rlr);
+    rlr.then(() => {this.instanceData.Register.autoSaveRegister();});
+
+    promises.push(this.instanceData.Queue.init());
     await Promise.all(promises);
   }
 
@@ -54,7 +64,7 @@ class SIQ {
    * @returns A promise that resolves when the item is saved // added to save queue
    */
   public async setItem(key: string, value: any, options?: _SIQ_EntryOptions): Promise<void> {
-    return _SIQ_setItem(this.internSet, key, value, options);
+    return _SIQ_setItem(this.instanceData, key, value, options);
   }
 
   /**
@@ -63,7 +73,7 @@ class SIQ {
    * @returns A promise that resolves with the item
    */
   public async getItem(key: string): Promise<any> {
-    throw new Error('Not implemented'); // TODO: Impl
+    return _SIQ_getItem(this.instanceData, key);
   }
 
   /**
@@ -88,7 +98,7 @@ class SIQ {
    * @returns A promise that resolves when the storage is cleared
    */
   public clear(): void {
-    this.internSet.MemoryMap.clear();
+    this.instanceData.MemoryMap.clear();
   }
 
   /**
@@ -165,7 +175,7 @@ class SIQ {
    * @param callback The callback to call when an error occurs
    */
   public onError(callback: (error: Error) => void): void {
-    this.internSet.ErrorHandler.addListener(callback);
+    this.instanceData.ErrorHandler.addListener(callback);
   }
 
   /**
@@ -173,14 +183,14 @@ class SIQ {
    * @param callback The callback to remove
    */
   public offError(callback: (error: Error) => void): void {
-    this.internSet.ErrorHandler.removeListener(callback);
+    this.instanceData.ErrorHandler.removeListener(callback);
   }
 
   /**
    * Removes all event Listeners for internal errors
    */
   public offAllErrors(): void {
-    this.internSet.ErrorHandler.removeAllListener();
+    this.instanceData.ErrorHandler.removeAllListener();
   }
 
 }

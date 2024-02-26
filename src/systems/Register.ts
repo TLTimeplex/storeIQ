@@ -138,4 +138,15 @@ export class _SIQ_Register {
     }
   }
 
+  /**
+   * Auto save the register to the storage
+   */
+  private stopAutoSave: boolean = false; // TODO: Add a way to stop the auto save
+  public async autoSaveRegister() {
+    while (!this.stopAutoSave) {
+      await new Promise((resolve) => setTimeout(resolve, this.settings.register.autoSaveInterval));
+      await this.saveRegister();
+    }
+  }
+
 }

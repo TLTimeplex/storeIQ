@@ -57,8 +57,8 @@ export function _SIQ_setItem(intern: _SIQ_Intern, key: string, value: any, optio
         if (options.expires !== undefined) {
           settings.expires = options.expires;
         }
-        if (options.sessional !== undefined) {
-          settings.session = intern.sessionID;
+        if (options.sessional !== undefined && options.sessional) {
+          settings.session = intern.SessionID;
         }
       }
       intern.Register.set(key, settings);

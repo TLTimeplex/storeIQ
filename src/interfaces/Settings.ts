@@ -1,4 +1,7 @@
 export interface _SIQ_Settings {
+  register: {
+    autoSaveInterval: number; // in milliseconds
+  }
   /** Defines the maximum size of a string saved in the Webstorages */
   webStorageThreshold: number;
   debug: boolean;
@@ -11,6 +14,9 @@ export interface _SIQ_Settings {
 }
 
 export interface _SIQ_Public_Settings {
+  register: {
+    autoSaveInterval: number; // in milliseconds
+  }
   /** Defines the maximum size of a string saved in the Webstorages */
   webStorageThreshold?: number;
   debug?: boolean;
@@ -24,6 +30,9 @@ export interface _SIQ_Public_Settings {
 
 export function _SIQ_mergeSettings(settings: _SIQ_Public_Settings, defaults: _SIQ_Settings): _SIQ_Settings {
   return {
+    register: {
+      autoSaveInterval: settings.register?.autoSaveInterval || defaults.register.autoSaveInterval,
+    },
     webStorageThreshold: settings.webStorageThreshold || defaults.webStorageThreshold,
     debug: settings.debug || defaults.debug,
     shutter: {

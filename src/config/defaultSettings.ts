@@ -2,6 +2,9 @@ import { _SIQ_Settings } from "../interfaces/Settings";
 
 // The default settings for the QIS class
 export const _SIQ_defaultSettings: _SIQ_Settings = {
+  register: {
+    autoSaveInterval: 1000,
+  },
   debug: false,
   webStorageThreshold: 1000,
   shutter: {
