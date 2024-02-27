@@ -130,9 +130,6 @@ out
 /coverage/
 
 # Build files
-/dist/index.d.mts
-/dist/index.js
 /dist/index.js.map
-/dist/index.mjs
 /dist/index.mjs.map
 

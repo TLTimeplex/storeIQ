@@ -14,29 +14,31 @@ import { _SIQ_Register } from './systems/Register';
 import { _SIQ_IndexedDBController } from './systems/storage/indexedDB';
 import { _SIQ_getItem } from './functions/getItem';
 import { _SIQ_removeItem } from './functions/removeItem';
+import { _SIQ_delete } from './functions/delete';
+import { _SIQ_sanityCheck_EntryOptions } from './functions/sanityCheck/sanityCheck_EntryOptions';
 
 class SIQ {
   private readonly instanceData: _SIQ_Intern;
 
   constructor(settings?: _SIQ_Public_Settings) {
-    const MemoryMap: Map<string, any>     = new Map<string, any>();
-    const sessionID: number               = new Date().getTime(); // Use date as session ID. It auto increments ;D
-    
-    const Settings: _SIQ_Settings         = _SIQ_mergeSettings(settings || {} as _SIQ_Public_Settings, _SIQ_defaultSettings);
+    const MemoryMap: Map<string, any> = new Map<string, any>();
+    const sessionID: number = new Date().getTime(); // Use date as session ID. It auto increments ;D
+
+    const Settings: _SIQ_Settings = _SIQ_mergeSettings(settings || {} as _SIQ_Public_Settings, _SIQ_defaultSettings);
     const ErrorHandler: _SIQ_ErrorHandler = new _SIQ_ErrorHandler();
     const IndexDBStorage
-               : _SIQ_IndexedDBController = new _SIQ_IndexedDBController('storage', 'storage');
+      : _SIQ_IndexedDBController = new _SIQ_IndexedDBController('storage', 'storage');
 
-    const Register: _SIQ_Register         = new _SIQ_Register(Settings, ErrorHandler);
-    const Queue: _SIQ_AsyncStorageQueue   = new _SIQ_AsyncStorageQueue(Settings, ErrorHandler, IndexDBStorage);
+    const Register: _SIQ_Register = new _SIQ_Register(Settings, ErrorHandler);
+    const Queue: _SIQ_AsyncStorageQueue = new _SIQ_AsyncStorageQueue(Settings, ErrorHandler, IndexDBStorage);
 
     this.instanceData = {
-      MemoryMap:      MemoryMap,
-      Settings:       Settings,
-      Register:       Register,
-      Queue:          Queue,
-      ErrorHandler:   ErrorHandler,
-      SessionID:      sessionID,
+      MemoryMap: MemoryMap,
+      Settings: Settings,
+      Register: Register,
+      Queue: Queue,
+      ErrorHandler: ErrorHandler,
+      SessionID: sessionID,
       IndexDBStorage: IndexDBStorage
     };
   }
@@ -51,7 +53,7 @@ class SIQ {
 
     const rlr = this.instanceData.Register.loadRegister()
     promises.push(rlr);
-    rlr.then(() => {this.instanceData.Register.autoSaveRegister();});
+    rlr.then(() => { this.instanceData.Register.autoSaveRegister(); });
 
     promises.push(this.instanceData.Queue.init());
     await Promise.all(promises);
@@ -91,7 +93,7 @@ class SIQ {
    * @returns A promise that resolves when the storage is cleared
    */
   public async delete(): Promise<void> {
-    throw new Error('Not implemented'); // TODO: Impl
+    _SIQ_delete(this.instanceData);
   }
 
   /**
@@ -116,7 +118,7 @@ class SIQ {
    * @returns A promise that resolves with the amount of items in the storage	
    */
   public async getLength(): Promise<number> {
-    throw new Error('Not implemented'); // TODO: Impl
+    return this.instanceData.Register.size();
   }
 
   /**
@@ -124,7 +126,7 @@ class SIQ {
    * @returns A promise that resolves with the keys of all items in the storage
    */
   public async Keys(): Promise<string[]> {
-    throw new Error('Not implemented'); // TODO: Impl
+    return Array.from(this.instanceData.Register.keys());
   }
 
   /**
@@ -133,7 +135,7 @@ class SIQ {
    * @returns A promise that resolves with a boolean indicating if the item exists
    */
   public async hasItem(key: string): Promise<boolean> {
-    throw new Error('Not implemented'); // TODO: Impl
+    return this.instanceData.Register.has(key);
   }
 
   /**
@@ -142,7 +144,26 @@ class SIQ {
    * @returns A promise that resolves with the options
    */
   public setOptions(key: string, options: _SIQ_EntryOptions): void {
-    throw new Error('Not implemented'); // TODO: Impl
+    try {
+      var _options = this.instanceData.Register.get(key);
+
+      if (!_options) {
+        throw new Error('No such key');
+      }
+
+      _SIQ_sanityCheck_EntryOptions(options);
+
+      if (options.expires) {
+        _options.expires = options.expires;
+      }
+      if (options.sessional) {
+        _options.session = this.instanceData.SessionID;
+      }
+
+      this.instanceData.Register.set(key, _options);
+    } catch (error) {
+      return this.instanceData.ErrorHandler.error(error as Error);
+    }
   }
 
   /**

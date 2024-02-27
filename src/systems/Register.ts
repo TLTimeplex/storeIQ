@@ -56,6 +56,10 @@ export class _SIQ_Register {
     return this.register.entries();
   }
 
+  public size(): number {
+    return this.register.size;
+  }
+
   /**
    * Load the register from the storage if it exists, otherwise create a new one
    */

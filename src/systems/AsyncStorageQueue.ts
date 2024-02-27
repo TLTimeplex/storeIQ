@@ -146,8 +146,15 @@ export class _SIQ_AsyncStorageQueue {
    * Add a storage order to the queue
    * @param storageOrder The storage order to add to the queue
     */
-  addOrder(storageOrder: _SIQ_StorageOrder) {
+  public addOrder(storageOrder: _SIQ_StorageOrder) {
     this.queue.enqueue(storageOrder);
+  }
+
+  public async clear() {
+    const wasRunning = this.running;
+    if (wasRunning) await this.stop();
+    this.queue.clear();
+    if (wasRunning) this.start();
   }
 
 }
