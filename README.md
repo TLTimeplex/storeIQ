@@ -1,9 +1,9 @@
 # storeIQ
 Introducing a user-friendly JavaScript library designed for effortless data storage. This library simplifies the process by analyzing the data and determining the most efficient storage location. Moreover, it enhances performance by caching data in memory for quicker access during repeated use. With this tool, managing data becomes both straightforward and efficient.
 ## Installation
-To install storeIQ, their are several options available. You can either use npm. 
+To install storeIQ, their are several options available. You can either use npm. (Currently not available)
 ```bash
-npm install storeiq
+npm install store-iq
 ```
 Or you can clone the repository and use the source code directly.
 ```bash
@@ -15,7 +15,7 @@ Or download the releases package and use it directly in your project.
 * [Latest Release](https://github.com/TLTimeplex/storeIQ/releases/latest)
 ## Usage
 ```ts
-import storeIQ from './PATH/TO/STOREIQ/dist/index.min.js';
+import storeIQ from './PATH/TO/STOREIQ/dist/index.mjs';
 
 // Create a new storeIQ instance
 const store = new storeIQ(/** settings overwrite */);
