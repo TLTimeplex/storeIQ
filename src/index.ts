@@ -18,13 +18,14 @@ import { _SIQ_removeItem } from './functions/removeItem';
 import { _SIQ_delete } from './functions/delete';
 import { _SIQ_sanityCheck_EntryOptions } from './functions/sanityCheck/sanityCheck_EntryOptions';
 import { _SIQ_setOptions } from './functions/setOptions';
+import { _SIQ_generateSessionID } from './functions/generateSessionID';
 
 class SIQ {
   private readonly instanceData: _SIQ_Intern;
 
   constructor(settings?: _SIQ_Public_Settings) {
     const MemoryMap: Map<string, any> = new Map<string, any>();
-    const sessionID: number = new Date().getTime(); // Use date as session ID. It auto increments ;D
+    const sessionID: number = _SIQ_generateSessionID();
 
     const Settings: _SIQ_Settings = _SIQ_mergeSettings(settings || {} as _SIQ_Public_Settings, _SIQ_defaultSettings);
     const ErrorHandler: _SIQ_ErrorHandler = new _SIQ_ErrorHandler();
