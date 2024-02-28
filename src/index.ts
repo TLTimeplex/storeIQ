@@ -6,16 +6,18 @@ import { _SIQ_Public_Settings, _SIQ_Settings, _SIQ_mergeSettings } from './inter
 
 import { _SIQ_defaultSettings } from './config/defaultSettings';
 
-import { _SIQ_setItem } from './functions/setItem';
 
 import { _SIQ_ErrorHandler } from './systems/ErrorHandler';
 import { _SIQ_AsyncStorageQueue } from './systems/AsyncStorageQueue';
 import { _SIQ_Register } from './systems/Register';
 import { _SIQ_IndexedDBController } from './systems/storage/indexedDB';
+
+import { _SIQ_setItem } from './functions/setItem';
 import { _SIQ_getItem } from './functions/getItem';
 import { _SIQ_removeItem } from './functions/removeItem';
 import { _SIQ_delete } from './functions/delete';
 import { _SIQ_sanityCheck_EntryOptions } from './functions/sanityCheck/sanityCheck_EntryOptions';
+import { _SIQ_setOptions } from './functions/setOptions';
 
 class SIQ {
   private readonly instanceData: _SIQ_Intern;
@@ -144,26 +146,7 @@ class SIQ {
    * @returns A promise that resolves with the options
    */
   public setOptions(key: string, options: _SIQ_EntryOptions): void {
-    try {
-      var _options = this.instanceData.Register.get(key);
-
-      if (!_options) {
-        throw new Error('No such key');
-      }
-
-      _SIQ_sanityCheck_EntryOptions(options);
-
-      if (options.expires) {
-        _options.expires = options.expires;
-      }
-      if (options.sessional) {
-        _options.session = this.instanceData.SessionID;
-      }
-
-      this.instanceData.Register.set(key, _options);
-    } catch (error) {
-      return this.instanceData.ErrorHandler.error(error as Error);
-    }
+    _SIQ_setOptions(this.instanceData, key, options);
   }
 
   /**
