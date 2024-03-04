@@ -42,17 +42,9 @@ export class _SIQ_AsyncStorageQueue {
     try {
       this.running = true;
       while (this.enabled) {
-        const start = new Date().getTime();
-        const end = new Date().getTime() + this.settings.shutter.interval;
-        const next = (end + this.settings.shutter.timeout);
+        await new Promise((resolve) => setTimeout(resolve, this.settings.shutter.timeout));
 
-        if (this.settings.debug) {
-          console.log(`Async Queue: start:${start}, end:${end}, next:${next}`);
-        }
-
-        this.process(end);
-
-        await new Promise((resolve) => setTimeout(resolve, next - new Date().getTime()));
+        await this.process(this.settings.shutter.interval);
       }
 
       if (this.settings.debug) {
@@ -72,9 +64,9 @@ export class _SIQ_AsyncStorageQueue {
 
   /**
    * Process the async queue
-   * @param end The time at which the process should end
+   * @param duration The duration to process the queue for
    */
-  private async process(end: number) {
+  private async process(duration: number) {
     if (this.blocked || !this.enabled) return;
     if (this.queue.isEmpty()) return;
     if (this.indexedDB === null) await this.init();
@@ -82,7 +74,8 @@ export class _SIQ_AsyncStorageQueue {
 
     this.blocked = true;
 
-    while (new Date().getTime() < end) {
+    const end = new Date().getTime() + duration;
+    do {
       const order = this.queue.dequeue();
 
       if (order === undefined || order === null) break;
@@ -104,7 +97,7 @@ export class _SIQ_AsyncStorageQueue {
       }
 
       order.callback?.(true);
-    }
+    } while (new Date().getTime() < end);
 
     this.blocked = false;
 
@@ -154,7 +147,7 @@ export class _SIQ_AsyncStorageQueue {
     const wasRunning = this.running;
     if (wasRunning) await this.stop();
     this.queue.clear();
-    if (wasRunning) this.start();
+    if (wasRunning) await this.start();
   }
 
 }

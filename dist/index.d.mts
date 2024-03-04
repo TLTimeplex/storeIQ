@@ -15,8 +15,8 @@ interface _SIQ_EntryOptions {
 }
 
 interface _SIQ_Public_Settings {
-    register: {
-        autoSaveInterval: number;
+    register?: {
+        autoSaveInterval?: number;
     };
     /** Defines the maximum size of a string saved in the Webstorages */
     webStorageThreshold?: number;
