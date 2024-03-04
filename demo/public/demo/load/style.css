@@ -1,0 +1,123 @@
+body {
+  background-color: gray;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  height: 100vh;
+  width: 100vw;
+  background-image: url(../../img/background.svg);
+  background-size: cover;
+  overflow-x: hidden;
+}
+
+#containerTitle {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#containerContent {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+}
+
+#containerContent > div {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5%;
+  box-sizing: border-box;
+}
+
+.inputGroupContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2% 0;
+}
+
+button.disabled {
+  background-color: red;
+  color: white;
+}
+
+button.enabled {
+  background-color: green;
+  color: white;
+}
+
+#startGroup {
+  margin-top: 2%;
+}
+
+
+#rawData {
+  width: 100%;
+}
+
+#rawData.hidden {
+  display: none;
+}
+
+#countRun {
+  background-color: white;
+  color: black;
+  width: 7rem;
+  height: 2rem;
+  text-align: center;
+  border-radius: 0.5rem;
+}
+
+#resultTable {
+  width: 60%;
+  background-color: white;
+  color: black;
+  border-radius: 0.5rem;
+  border-collapse: collapse;
+}
+
+#resultTable td {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+#resultTable td, #resultTable th {
+  border-left: 1px solid black;
+}
+
+#resultTable th:first-child, #resultTable td:first-child{
+  border-left: none;
+}
+
+#rawDataTable {
+  width: 100%;
+  background-color: white;
+  color: black;
+  border-collapse: collapse;
+}
+
+#rawDataTable td {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+#rawDataTable td, #rawDataTable th {
+  border-left: 1px solid black;
+}
+
+#rawDataTable th:first-child, #rawDataTable td:first-child{
+  border-left: none;
+}
