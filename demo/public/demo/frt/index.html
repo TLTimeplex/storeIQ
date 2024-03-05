@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>StorageIQ Demo - Load</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div id="containerTitle">
+    <h1 id="title">Fully Randomized Tests</h1>
+    <p>Perform random Orders (Save, Load, Delete)</p>
+    <p>BUG! Pleas press the counter on the right hand side once and reload the page. Now you can press start. You need to perform this every time you want to test the demo!</p>
+  </div>
+  <div id="containerContent">
+    <div id="containerControll">
+      <div class="inputGroupContainer">
+        <p>Maximum number of order-sets</p>
+        <div class="inputGroup" id="selectAmount">
+          <input type="number" id="inputRuns" value="100" min="1" max="999999">
+          <button id="btnSetRunsInf" class="disabled">Inf</button>
+        </div>
+      </div>
+      <div class="inputGroupContainer">
+        <p>Select Amount of orders in a order-set (measures: ms per X orders)</p>
+        <input type="number" id="inputAmount" value="100" min="1" max="100000">
+      </div>
+      <div class="inputGroupContainer">
+        <label for="enableOrderLog">Print orders in console</label>
+        <input type="checkbox" id="enableOrderLog">
+      </div>
+      <div class="inputGroup" id="startGroup">
+        <button id="btnStartStop">Start</button>
+        <input type="checkbox" id="enableRawData">
+        <label for="enableRawData">Show raw data</label>
+      </div>
+    </div>
+    <div id="containerResult">
+      <h2 id="countRun">0</h2>
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>StorageIQ</th>
+            <th>Webstorage</th>
+            <th>IndexedDB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="resultStorageIQ">0</td>
+            <td id="resultWebstorage">0</td>
+            <td id="resultIndexDB">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="rawData" class="hidden">
+    <table id="rawDataTable">
+      <thead>
+        <tr>
+          <th>Run</th>
+          <th>StorageIQ</th>
+          <th>Webstorage</th>
+          <th>IndexedDB</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+  </div>
+
+  <script src="frt.js" type="module"></script>
+</body>
+
+</html>

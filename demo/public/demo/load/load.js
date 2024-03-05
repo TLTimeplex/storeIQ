@@ -159,8 +159,6 @@ async function testStoreIQ(data) {
 }
 
 async function testWebStorage(data) {
-  localStorage.clear();
-
   const start = performance.now();
   for (let i = 0; i < data.length; i++) {
     localStorage.getItem(`w_${i}`);
