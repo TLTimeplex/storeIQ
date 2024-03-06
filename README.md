@@ -100,7 +100,7 @@ npm run dev-build
 ```
 2. Change the `index.html` file in the `demo` folder to include the source script and not the minified version.
 ```html
-<script type="module" src="index.min.js"></script>
+<script type="module" src="<script>.min.js"></script>
 <!-- TO -->
-<script type="module" src="index.js"></script>
+<script type="module" src="<script>.js"></script>
 ```
