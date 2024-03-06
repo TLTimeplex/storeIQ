@@ -100,22 +100,25 @@ async function startTest() {
     }
 
     // IndexedDB
-    const request = indexedDB.open('test', 1);
-    request.onupgradeneeded = function () {
-      const db = request.result;
-      const store = db.createObjectStore('data');
-    }
-    request.onsuccess = function () {
-      const db = request.result;
-      const transaction = db.transaction('data', 'readwrite');
-      const store = transaction.objectStore('data');
-      for (let i = 0; i < data.length; i++) {
-        store.put(data[i], `i_${i}`);
+    await new Promise((resolve, reject) => {
+      const request = indexedDB.open('test', 1);
+      request.onupgradeneeded = function () {
+        const db = request.result;
+        const store = db.createObjectStore('data');
       }
-      transaction.oncomplete = function () {
-        db.close();
+      request.onsuccess = function () {
+        const db = request.result;
+        const transaction = db.transaction('data', 'readwrite');
+        const store = transaction.objectStore('data');
+        for (let i = 0; i < data.length; i++) {
+          store.put(data[i], `i_${i}`);
+        }
+        transaction.oncomplete = function () {
+          db.close();
+          resolve();
+        }
       }
-    }
+    });
   }
 
   // Execute tests with data
@@ -162,7 +165,6 @@ async function testStoreIQ(data) {
   await Promise.all(promises);
   const end = performance.now();
 
-  //await storeIQ.delete(); // TODO: find out why this is only working once
   return end - start;
 }
 
@@ -198,11 +200,6 @@ async function testIndexedDB(data) {
         const end = performance.now();
         db.close();
         resolve(end - start);
-        // Clear indexedDB
-        const deleteRequest = indexedDB.deleteDatabase('test');
-        deleteRequest.onsuccess = function () {
-          console.log('Deleted database successfully');
-        };
       }
     }
   });

@@ -78,3 +78,16 @@ This is subject to change, but here is the currently planned interface of the li
     Configuration options for storing a value, such as lifespan
   - `EntryMeta`  
     Metadata of a value, such as lifespan, storage location, and size
+
+## Demo
+To try out the demo perform the following steps:
+1. Clone the repository
+2. Run the following commands
+```bash
+cd ./demo/
+npm install
+npm run start
+```
+3. Open your browser and navigate to `http://localhost:3000/`
+
+This Tests will show you the basic abilities of the library and a basic example of how to use it.

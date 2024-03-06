@@ -120,6 +120,8 @@ async function startTest() {
 }
 
 async function testStoreIQ(data) {
+  await storeIQ.delete();
+
   let promises = [];
   const start = performance.now();
   for (let i = 0; i < data.length; i++) {
@@ -130,8 +132,6 @@ async function testStoreIQ(data) {
   await tmp;
   const end = performance.now();
 
-
-  //await storeIQ.delete(); // TODO: find out why this is only working once
   return { full: end - start, cached: cachedEnd - start };
 }
 
@@ -168,11 +168,11 @@ async function testIndexedDB(data) {
       transaction.oncomplete = function () {
         const end = performance.now();
         db.close();
-        resolve(end - start);
         // Clear indexedDB
         const deleteRequest = indexedDB.deleteDatabase('test');
         deleteRequest.onsuccess = function () {
           console.log('Deleted database successfully');
+          resolve(end - start);
         };
       }
     }
