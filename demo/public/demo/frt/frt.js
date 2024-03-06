@@ -278,7 +278,7 @@ async function generateOrders(amount, simulation = new Map()) {
   return { orders, simulation };
 }
 
-function generateData(depth = 0) { // Preventing += which leads to heavy memory leaks
+function generateData(depth = 0) {
   var typeOfData = Math.random();
   // String 40%
   if (typeOfData < 0.4) {
