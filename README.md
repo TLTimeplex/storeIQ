@@ -23,7 +23,7 @@ import storeIQ from './PATH/TO/STOREIQ/dist/index.mjs';
 const store = new storeIQ(/** settings overwrite */);
 
 // Start and Initialize the storeIQ instance
-store.start();
+await store.start();
 ```
 ### If you are not using React or something similar you need to change your `HTML`
 ```html
