@@ -147,7 +147,7 @@ export class _SIQ_AsyncStorageQueue {
     const wasRunning = this.running;
     if (wasRunning) await this.stop();
     this.queue.clear();
-    if (wasRunning) await this.start();
+    if (wasRunning) this.start();
   }
 
 }

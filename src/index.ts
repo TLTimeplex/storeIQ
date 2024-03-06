@@ -88,7 +88,7 @@ class SIQ {
    * @returns A promise that resolves when the item is removed
    */
   public async removeItem(key: string): Promise<void> {
-    _SIQ_removeItem(this.instanceData, key);
+    return _SIQ_removeItem(this.instanceData, key);
   }
 
   /**
@@ -96,7 +96,7 @@ class SIQ {
    * @returns A promise that resolves when the storage is cleared
    */
   public async delete(): Promise<void> {
-    _SIQ_delete(this.instanceData);
+    return _SIQ_delete(this.instanceData);
   }
 
   /**

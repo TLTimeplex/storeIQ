@@ -29,7 +29,8 @@ export async function _SIQ_delete(intern: _SIQ_Intern): Promise<void> {
     }
   }
 
-  // Clear the register & temporary register
+  // Clear the register & temporary data
   intern.Register.clear();
+  await intern.Register.saveRegister();
   intern.MemoryMap.clear();
 }
