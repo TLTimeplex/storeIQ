@@ -81,6 +81,7 @@ async function reset() {
 async function startTest() {
   await storeIQ.start();
   storeIQ.onError = (error) => { console.error(error) };
+  await reset();
 
   let run = 0;
   // Get user set settings

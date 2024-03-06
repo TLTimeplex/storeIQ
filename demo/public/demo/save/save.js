@@ -60,9 +60,17 @@ btnStartStop?.addEventListener('click', () => {
 var stopTest = false;
 const storeIQ = new SIQ();
 
+async function reset() {
+  localStorage.clear();
+  indexedDB.deleteDatabase('test');
+  sessionStorage.clear();
+  await storeIQ.delete();
+}
+
 async function startTest() {
   await storeIQ.start();
   storeIQ.onError = (error) => { console.error(error) };
+  await reset();
 
   let run = 0;
   // Get user set settings
