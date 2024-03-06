@@ -91,3 +91,16 @@ npm run start
 3. Open your browser and navigate to `http://localhost:3000/`
 
 This Tests will show you the basic abilities of the library and a basic example of how to use it.
+
+### Analyzing the demo
+If you would like to follow the code with the stepper to understand how the library works, you can do so by following the steps below:
+1. In the source folder, perform the following command. This will build the project with the source maps.
+```bash
+npm run dev-build
+```
+2. Change the `index.html` file in the `demo` folder to include the source script and not the minified version.
+```html
+<script type="module" src="index.min.js"></script>
+<!-- TO -->
+<script type="module" src="index.js"></script>
+```
