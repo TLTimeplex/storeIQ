@@ -136,13 +136,14 @@ async function startTest() {
 }
 
 async function testStoreIQ(data) {
+  var promisees = [];
   const start = performance.now();
 
   for (let i = 0; i < data.length; i++) {
     const order = data[i];
     switch (order.type) {
       case 'set':
-        storeIQ.setItem(`s_${order.key}`, order.value);
+        promisees.push(storeIQ.setItem(`s_${order.key}`, order.value));
         break;
       case 'get':
         const result = await storeIQ.getItem(`s_${order.key}`);
@@ -151,12 +152,14 @@ async function testStoreIQ(data) {
         }
         break;
       case 'delete':
-        storeIQ.removeItem(`s_${order.key}`);
+        promisees.push(storeIQ.removeItem(`s_${order.key}`));
         break;
     }
   }
 
   const end = performance.now();
+
+  await Promise.all(promisees);
 
   return end - start;
 }

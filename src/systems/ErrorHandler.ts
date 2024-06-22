@@ -14,6 +14,6 @@ export class _SIQ_ErrorHandler {
   }
 
   public error(error: Error): void {
-    this.listeners.forEach(listeners => listeners(error as Error));
+    this.listeners.forEach(listener => listener(error as Error));
   }
 }

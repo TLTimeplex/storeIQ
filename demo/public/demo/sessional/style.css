@@ -1,0 +1,62 @@
+body {
+  background-color: gray;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  height: 100vh;
+  width: 100vw;
+  background-image: url(../../img/background.svg);
+  background-size: cover;
+  overflow-x: hidden;
+}
+
+#containerTitle {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#containerContent {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.containerTile {
+  width: 50%;
+  height: 50%;
+  padding: 5%;
+  box-sizing: border-box;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.containerTile > h3 {
+  margin: 0;
+}
+
+.fancyInput {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.fancyInput input, .fancyInput button, .fancyInput select, .fancyInput label, .fancyInput textarea{
+  margin: 5px;
+}
+
+#objectPreview {
+  max-width: 90%;
+  max-height: 70%;
+}

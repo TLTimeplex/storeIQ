@@ -58,7 +58,7 @@ class SIQ {
     promises.push(rlr);
     rlr.then(() => { this.instanceData.Register.autoSaveRegister(); });
 
-    promises.push(this.instanceData.Queue.init());
+    promises.push(this.instanceData.Queue.init()); // Remove ??
     await Promise.all(promises);
   }
 

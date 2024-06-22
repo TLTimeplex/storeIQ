@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>StorageIQ Demo - Sessional</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+  <div id="containerTitle">
+    <h1 id="title">Sessional</h1>
+    <p>Shows the ability to save everything as a sessional item</p>
+    <p id="sessionID">Session ID: ?</p>
+  </div>
+  <div id="containerContent">
+    <div class="containerTile">
+      <h3>String</h3>
+      <div class="fancyInput">
+        <h2>" </h2>
+        <textarea id="stringInput" placeholder="Enter a string"></textarea>
+        <h2> "</h2>
+      </div>
+      <button id="stringSave">Save</button>
+    </div>
+    <div class="containerTile">
+      <h3>Number</h3>
+      <div class="fancyInput">
+        <h2> </h2>
+        <input id="numberInput" type="number" placeholder="Enter a number">
+        <h2> </h2>
+      </div>
+      <button id="numberSave">Save</button>
+    </div>
+    <div class="containerTile">
+      <h3>Object</h3>
+      <div class="fancyInput">
+        <h2> </h2>
+        <input id="objectInput" type="file">
+        <h2> </h2>
+      </div>
+      <button id="objectSave">Save</button>
+
+    </div>
+    <div class="containerTile">
+      <img id="objectPreview">
+      <button id="objectDownload">Download</button>
+    </div>
+  </div>
+  <script type="module" src="sessional.js"></script>
+</body>
+
+</html>
